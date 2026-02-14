@@ -1,1 +1,211 @@
-# Happy-Anniversary-
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Anniversary Manish & Neetu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://files.catbox.moe/os49kq.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #ffffff;
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+
+        #container {
+            position: relative;
+            z-index: 10;
+            padding: 30px;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            border-radius: 20px;
+            border: 2px solid #ff69b4;
+            box-shadow: 0 0 30px rgba(255, 105, 180, 0.5);
+            max-width: 85%;
+            width: 550px;
+        }
+
+        #surprise-btn {
+            padding: 18px 35px;
+            font-size: 22px;
+            font-family: 'Dancing Script', cursive;
+            background: linear-gradient(45deg, #ff1493, #ff69b4);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(255, 20, 147, 0.6);
+            transition: 0.4s ease;
+        }
+
+        #surprise-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 40px #ff1493;
+        }
+
+        #message {
+            display: none;
+            animation: fadeIn 2s forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.2rem;
+            color: #ffd700;
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
+        }
+
+        .shayari {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            margin-top: 15px;
+        }
+
+        .shayari p {
+            margin: 8px 0;
+            opacity: 0;
+            animation: slideUp 1s forwards;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 15;
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="anniversary-song" loop>
+        <source src="https://files.catbox.moe/1t198c.m4a" type="audio/mp4">
+        Your browser does not support the audio element.
+    </audio>
+
+    <div id="container">
+        <button id="surprise-btn">Click for Magic Manish & Neetu ❤️</button>
+
+        <div id="message">
+            <h1>Happy Anniversary!</h1>
+            <h2 style="font-family: 'Dancing Script'; font-size: 2.2rem; color: #ff69b4; margin-top: 0;">Manish & Neetu</h2>
+            
+            <div class="shayari">
+                <p style="animation-delay: 0.5s;">विश्वास का यह बंधन यूं ही बना रहे,</p>
+                <p style="animation-delay: 1.5s;">आपके जीवन में प्रेम का सागर यूं ही बहता रहे,</p>
+                <p style="animation-delay: 2.5s;">दुआ है रब से सुख और समृद्धि से जीवन भरा रहे,</p>
+                <p style="animation-delay: 3.5s; color: #ffd700; font-weight: bold;">शादी की सालगिरह की आपको ढेरों शुभकामनाएं…!</p>
+            </div>
+        </div>
+    </div>
+
+    <canvas id="canvas"></canvas>
+
+    <script>
+        const btn = document.getElementById('surprise-btn');
+        const message = document.getElementById('message');
+        const song = document.getElementById('anniversary-song');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let particles = [];
+        const colors = ['#FFD700', '#FF69B4', '#FF4500', '#FFFFFF', '#00FFFF'];
+
+        class Particle {
+            constructor(x, y, color) {
+                this.x = x;
+                this.y = y;
+                this.color = color;
+                this.velocity = {
+                    x: (Math.random() - 0.5) * 10,
+                    y: (Math.random() - 0.5) * 10
+                };
+                this.alpha = 1;
+                this.friction = 0.95;
+                this.gravity = 0.12;
+            }
+
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, 2.5, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                ctx.restore();
+            }
+
+            update() {
+                this.velocity.x *= this.friction;
+                this.velocity.y *= this.friction;
+                this.velocity.y += this.gravity;
+                this.x += this.velocity.x;
+                this.y += this.velocity.y;
+                this.alpha -= 0.01;
+            }
+        }
+
+        function createFirework() {
+            const x = Math.random() * canvas.width;
+            const y = Math.random() * (canvas.height * 0.5);
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            for (let i = 0; i < 40; i++) {
+                particles.push(new Particle(x, y, color));
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach((p, i) => {
+                if (p.alpha > 0) {
+                    p.update();
+                    p.draw();
+                } else {
+                    particles.splice(i, 1);
+                }
+            });
+            requestAnimationFrame(animate);
+        }
+
+        btn.addEventListener('click', () => {
+            btn.style.display = 'none';
+            message.style.display = 'block';
+            
+            // Start Music
+            song.play().catch(error => console.log("Audio play failed:", error));
+            
+            animate();
+            setInterval(createFirework, 700);
+        });
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>
